@@ -1,5 +1,6 @@
 package com.up42.codingchallenge
 
+import com.up42.codingchallenge.exception.EmptyListException
 import com.up42.codingchallenge.exception.ImageNotFoundException
 import com.up42.codingchallenge.services.FeatureService
 import org.junit.jupiter.api.Assertions.*
@@ -8,6 +9,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.assertThrows
 import org.springframework.test.util.ReflectionTestUtils
+import java.io.FileNotFoundException
 import java.util.*
 
 
@@ -26,7 +28,7 @@ class FeaturesServiceTest {
 
         val features = featureService.listFeatures()
         assertNotNull(features)
-        assertInstanceOf(List::class.java,features)
+        assertInstanceOf(List::class.java, features)
 
     }
 
@@ -35,14 +37,36 @@ class FeaturesServiceTest {
 
         val imageByteArray = featureService.getImage(UUID.fromString("39c2f29e-c0f8-4a39-a98b-deed547d6aea"))
         assertNotNull(imageByteArray)
-        assertInstanceOf(ByteArray::class.java,imageByteArray)
+        assertInstanceOf(ByteArray::class.java, imageByteArray)
 
     }
 
     @Test
     fun `should throw exception when Image not found`() {
+        ReflectionTestUtils.setField(featureService, "path", "/static/source-data.json")
 
         assertThrows<ImageNotFoundException> {
+            featureService.getImage(UUID.fromString("39c2f29e-c0f8-4a39-a98b-deed547d6aee"))
+        }
+
+    }
+
+
+    @Test
+    fun `should throw exception when source data empty`() {
+        ReflectionTestUtils.setField(featureService, "path", "/static/sources-data.json")
+
+        assertThrows<EmptyListException> {
+            featureService.getImage(UUID.fromString("39c2f29e-c0f8-4a39-a98b-deed547d6aee"))
+        }
+
+    }
+
+    @Test
+    fun `should throw exception when source data not available`() {
+        ReflectionTestUtils.setField(featureService, "path", "/static/source-datas.json")
+
+        assertThrows<FileNotFoundException> {
             featureService.getImage(UUID.fromString("39c2f29e-c0f8-4a39-a98b-deed547d6aee"))
         }
 
