@@ -2,8 +2,6 @@ package com.up42.codingchallenge
 
 import com.up42.codingchallenge.exception.ImageNotFoundException
 import com.up42.codingchallenge.services.FeatureService
-import io.restassured.RestAssured
-import org.junit.Before
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
@@ -22,14 +20,6 @@ class FeaturesServiceTest {
     fun beforeAll() {
         ReflectionTestUtils.setField(featureService, "path", "/static/source-data.json")
     }
-
-    data class ExpectedFeature(
-            val id: String,
-            val timestamp: Long,
-            val beginViewingDate: Long,
-            val endViewingDate: Long,
-            val missionName: String
-    )
 
     @Test
     fun `should get feature list`() {
