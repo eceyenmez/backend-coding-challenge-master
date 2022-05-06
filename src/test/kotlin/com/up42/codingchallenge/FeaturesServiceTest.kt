@@ -2,10 +2,14 @@ package com.up42.codingchallenge
 
 import com.up42.codingchallenge.exception.ImageNotFoundException
 import com.up42.codingchallenge.services.FeatureService
+import io.restassured.RestAssured
+import org.junit.Before
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.assertThrows
+import org.springframework.test.util.ReflectionTestUtils
 import java.util.*
 
 
@@ -13,6 +17,11 @@ import java.util.*
 class FeaturesServiceTest {
 
     private val featureService = FeatureService()
+
+    @BeforeAll
+    fun beforeAll() {
+        ReflectionTestUtils.setField(featureService, "path", "/static/source-data.json")
+    }
 
     data class ExpectedFeature(
             val id: String,
